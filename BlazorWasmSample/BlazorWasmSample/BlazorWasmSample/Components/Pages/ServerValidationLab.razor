@@ -1,0 +1,82 @@
+@page "/server-validation"
+@rendermode InteractiveServer
+@using BlazorWasmSample.Models
+@using System.Globalization
+
+<PageTitle>Interactive Server validation</PageTitle>
+
+<div class="validation-lab">
+    <h1>Interactive Server localized validation</h1>
+    <p>Use this form to compare representative messages with the other render modes.</p>
+
+    <div class="validation-evidence" aria-label="Current test context">
+        <span class="evidence-badge">Interactive Server</span>
+        <span class="evidence-badge">@CultureInfo.CurrentUICulture.Name</span>
+    </div>
+
+    <nav aria-label="Validation culture">
+        <button type="button" class="link-button" onclick="window.location.href='/set-culture?culture=fr-FR&amp;redirectUri=%2Fserver-validation'">French (France)</button>
+        <span aria-hidden="true"> | </span>
+        <button type="button" class="link-button" onclick="window.location.href='/set-culture?culture=de-DE&amp;redirectUri=%2Fserver-validation'">German (Germany)</button>
+    </nav>
+
+    <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="scenario-grid">
+            <ServerFieldScenario Title="Explicit keys" Help="Same evidence text as static SSR.">
+                <label for="server-explicit" class="form-label">Explicit name</label>
+                <InputText id="server-explicit" class="form-control" @bind-Value="Model.ExplicitName" />
+                <ValidationMessage For="() => Model.ExplicitName" />
+            </ServerFieldScenario>
+
+            <ServerFieldScenario Title="Conventional member key" Help="Most-specific conventional key.">
+                <label for="server-conventional" class="form-label">Conventional name</label>
+                <InputText id="server-conventional" class="form-control" @bind-Value="Model.ConventionalName" />
+                <ValidationMessage For="() => Model.ConventionalName" />
+            </ServerFieldScenario>
+
+            <ServerFieldScenario Title="Formatted message" Help="Enter fewer than 3 or more than 8 characters.">
+                <label for="server-code" class="form-label">Scenario code</label>
+                <InputText id="server-code" class="form-control" @bind-Value="Model.Code" />
+                <ValidationMessage For="() => Model.Code" />
+            </ServerFieldScenario>
+
+            <ServerFieldScenario Title="Missing resource fallback" Help="The missing key must not be displayed.">
+                <label for="server-missing" class="form-label">Missing resource</label>
+                <InputText id="server-missing" class="form-control" @bind-Value="Model.MissingResource" />
+                <ValidationMessage For="() => Model.MissingResource" />
+            </ServerFieldScenario>
+
+            <ServerFieldScenario Title="Nested object" Help="Expected path: Address.Street">
+                <label for="server-street" class="form-label">Street</label>
+                <InputText id="server-street" class="form-control" @bind-Value="Model.Address.Street" />
+                <ValidationMessage For="() => Model.Address.Street" />
+            </ServerFieldScenario>
+
+            <ServerFieldScenario Title="Collection item" Help="Expected path: Contacts[0].Email">
+                <label for="server-contact" class="form-label">Contact email</label>
+                <InputText id="server-contact" class="form-control" @bind-Value="Model.Contacts[0].Email" />
+                <ValidationMessage For="() => Model.Contacts[0].Email" />
+            </ServerFieldScenario>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Validate</button>
+    </EditForm>
+
+    @if (submitted)
+    {
+        <p role="status" class="alert alert-success mt-3">Interactive Server validation passed.</p>
+    }
+</div>
+
+@code {
+    private ServerValidationModel Model { get; } = new();
+    private bool submitted;
+
+    private void HandleValidSubmit()
+    {
+        submitted = true;
+    }
+}

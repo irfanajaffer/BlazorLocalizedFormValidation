@@ -1,0 +1,16 @@
+<section class="scenario-card">
+    <h2 class="h5">@Title</h2>
+    <p class="scenario-help">@Help</p>
+    @ChildContent
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public required string Title { get; set; }
+
+    [Parameter, EditorRequired]
+    public required string Help { get; set; }
+
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
+}

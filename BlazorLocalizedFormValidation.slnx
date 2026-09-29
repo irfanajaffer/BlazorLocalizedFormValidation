@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/BlazorSSR/">
+    <Project Path="BlazorSSRSample/BlazorSSRSample/BlazorSSRSample.csproj" />
+  </Folder>
+  <Folder Name="/BlazorWasmHost/">
+    <Project Path="BlazorWasmSample/BlazorWasmSample/BlazorWasmSample.Client/BlazorWasmSample.Client.csproj" />
+    <Project Path="BlazorWasmSample/BlazorWasmSample/BlazorWasmSample/BlazorWasmSample.csproj" />
+  </Folder>
+</Solution>

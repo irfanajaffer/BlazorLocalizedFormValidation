@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="RequiredMessage" xml:space="preserve"><value>EN Required failed.</value></data>
+  <data name="StringLengthMessage" xml:space="preserve"><value>EN StringLength failed for {0}: use {2}-{1} characters.</value></data>
+  <data name="MinLengthMessage" xml:space="preserve"><value>EN MinLength failed for {0}: minimum {1}.</value></data>
+  <data name="MaxLengthMessage" xml:space="preserve"><value>EN MaxLength failed for {0}: maximum {1}.</value></data>
+  <data name="RangeMessage" xml:space="preserve"><value>EN Range failed for {0}: {1}-{2}.</value></data>
+  <data name="RegularExpressionMessage" xml:space="preserve"><value>EN RegularExpression failed.</value></data>
+  <data name="EmailAddressMessage" xml:space="preserve"><value>EN EmailAddress failed.</value></data>
+  <data name="UrlMessage" xml:space="preserve"><value>EN Url failed.</value></data>
+  <data name="PhoneMessage" xml:space="preserve"><value>EN Phone failed.</value></data>
+  <data name="CreditCardMessage" xml:space="preserve"><value>EN CreditCard failed.</value></data>
+  <data name="CompareMessage" xml:space="preserve"><value>EN Compare failed.</value></data>
+  <data name="FileExtensionsMessage" xml:space="preserve"><value>EN FileExtensions failed.</value></data>
+  <data name="SelectionRequiredMessage" xml:space="preserve"><value>EN selection is required.</value></data>
+</root>

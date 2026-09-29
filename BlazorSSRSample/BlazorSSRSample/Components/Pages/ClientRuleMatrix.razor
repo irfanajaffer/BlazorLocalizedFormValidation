@@ -1,0 +1,186 @@
+@page "/client-rules"
+@using BlazorSSRSample.Models
+@using System.Globalization
+
+<PageTitle>Static SSR client validation matrix</PageTitle>
+
+<div class="validation-lab">
+    <h1>Static SSR client validation matrix</h1>
+
+    <p>
+        This page contains every built-in attribute documented for .NET 11
+        static SSR client validation. Server validation remains authoritative.
+    </p>
+
+    <div class="validation-evidence" aria-label="Current test context">
+        <span class="evidence-badge">Static SSR</span>
+        <span class="evidence-badge">@CultureInfo.CurrentUICulture.Name</span>
+        <span class="evidence-badge">
+            Global client validation:
+            @(Configuration.GetValue<bool>("Validation:DisableClientValidation") ? "disabled" : "enabled")
+        </span>
+    </div>
+
+    <nav aria-label="Validation culture">
+        <a href="/client-rules?culture=fr-FR&amp;ui-culture=fr-FR">French (France)</a>
+        <span aria-hidden="true"> | </span>
+        <a href="/client-rules?culture=de-DE&amp;ui-culture=de-DE">German (Germany)</a>
+    </nav>
+
+    <EditForm Model="Model" FormName="client-rule-matrix"
+              OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="scenario-grid">
+            <FieldScenario Title="Required" Help="Leave empty, then leave the field.">
+                <label for="required-text" class="form-label">Required text</label>
+                <InputText id="required-text" class="form-control" @bind-Value="Model.RequiredText" />
+                <ValidationMessage For="() => Model.RequiredText" />
+            </FieldScenario>
+
+            <FieldScenario Title="StringLength" Help="Enter 1-2 or more than 10 characters.">
+                <label for="string-length" class="form-label">String length (3-10)</label>
+                <InputText id="string-length" class="form-control" @bind-Value="Model.StringLengthText" />
+                <ValidationMessage For="() => Model.StringLengthText" />
+            </FieldScenario>
+
+            <FieldScenario Title="MinLength" Help="Enter fewer than 3 characters.">
+                <label for="min-length" class="form-label">Minimum length (3)</label>
+                <InputText id="min-length" class="form-control" @bind-Value="Model.MinLengthText" />
+                <ValidationMessage For="() => Model.MinLengthText" />
+            </FieldScenario>
+
+            <FieldScenario Title="MaxLength" Help="Enter more than 5 characters.">
+                <label for="max-length" class="form-label">Maximum length (5)</label>
+                <InputText id="max-length" class="form-control" @bind-Value="Model.MaxLengthText" />
+                <ValidationMessage For="() => Model.MaxLengthText" />
+            </FieldScenario>
+
+            <FieldScenario Title="Range" Help="Enter a number outside 1-10.">
+                <label for="range-number" class="form-label">Numeric range (1-10)</label>
+                <InputNumber id="range-number" class="form-control" @bind-Value="Model.RangeNumber" />
+                <ValidationMessage For="() => Model.RangeNumber" />
+            </FieldScenario>
+
+            <FieldScenario Title="RegularExpression" Help="Enter anything other than three uppercase letters.">
+                <label for="regex-text" class="form-label">Three uppercase letters</label>
+                <InputText id="regex-text" class="form-control" @bind-Value="Model.RegularExpressionText" />
+                <ValidationMessage For="() => Model.RegularExpressionText" />
+            </FieldScenario>
+
+            <FieldScenario Title="EmailAddress" Help="Enter an invalid email address.">
+                <label for="email" class="form-label">Email address</label>
+                <InputText id="email" type="email" class="form-control" @bind-Value="Model.Email" />
+                <ValidationMessage For="() => Model.Email" />
+            </FieldScenario>
+
+            <FieldScenario Title="Url" Help="Enter an invalid absolute URL.">
+                <label for="url" class="form-label">URL</label>
+                <InputText id="url" type="url" class="form-control" @bind-Value="Model.Url" />
+                <ValidationMessage For="() => Model.Url" />
+            </FieldScenario>
+
+            <FieldScenario Title="Phone" Help="Enter a value rejected by PhoneAttribute.">
+                <label for="phone" class="form-label">Phone</label>
+                <InputText id="phone" type="tel" class="form-control" @bind-Value="Model.Phone" />
+                <ValidationMessage For="() => Model.Phone" />
+            </FieldScenario>
+
+            <FieldScenario Title="CreditCard" Help="Enter an invalid card number. This sample never stores or logs values.">
+                <label for="credit-card" class="form-label">Synthetic card number</label>
+                <InputText id="credit-card" inputmode="numeric" class="form-control" @bind-Value="Model.CreditCard" />
+                <ValidationMessage For="() => Model.CreditCard" />
+            </FieldScenario>
+
+            <FieldScenario Title="Compare" Help="Enter two different values.">
+                <label for="comparison-source" class="form-label">Comparison source</label>
+                <InputText id="comparison-source" class="form-control mb-2" @bind-Value="Model.ComparisonSource" />
+                <label for="comparison-value" class="form-label">Comparison value</label>
+                <InputText id="comparison-value" class="form-control" @bind-Value="Model.ComparisonValue" />
+                <ValidationMessage For="() => Model.ComparisonValue" />
+            </FieldScenario>
+
+            <FieldScenario Title="FileExtensions" Help="Enter a file name that doesn't end in .pdf or .txt.">
+                <label for="file-name" class="form-label">File name (.pdf or .txt)</label>
+                <InputText id="file-name" class="form-control" @bind-Value="Model.FileName" />
+                <ValidationMessage For="() => Model.FileName" />
+            </FieldScenario>
+
+            <FieldScenario Title="Select timing" Help="Required dropdowns validate immediately after selection.">
+                <label for="required-selection" class="form-label">Required selection</label>
+                <InputSelect id="required-selection" class="form-select" @bind-Value="Model.Selection">
+                    <option value="">Choose a value</option>
+                    <option value="valid">Valid value</option>
+                </InputSelect>
+                <ValidationMessage For="() => Model.Selection" />
+            </FieldScenario>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button type="submit" class="btn btn-primary">Validate in browser</button>
+            <button type="submit" class="btn btn-outline-secondary" formnovalidate>
+                Submit with formnovalidate
+            </button>
+        </div>
+    </EditForm>
+
+    @if (submissionResult is not null)
+    {
+        <p role="status" class="alert alert-info mt-3" data-testid="matrix-submit-result">
+            @submissionResult
+        </p>
+    }
+
+    <section class="scenario-card mt-4" aria-labelledby="form-opt-out-heading">
+        <h2 id="form-opt-out-heading" class="h4">Per-form opt-out</h2>
+        <p>
+            This form sets <code>DisableClientValidation="true"</code>. Its invalid
+            submission should reach the server.
+        </p>
+        <EditForm Model="OptOut" FormName="form-opt-out" OnInvalidSubmit="HandleOptOutInvalidSubmit">
+            <DataAnnotationsValidator DisableClientValidation="true" />
+            <label for="opt-out-value" class="form-label">Required opt-out value</label>
+            <InputText id="opt-out-value" class="form-control" @bind-Value="OptOut.Value" />
+            <ValidationMessage For="() => OptOut.Value" />
+            <button type="submit" class="btn btn-outline-primary mt-3">Submit opt-out form</button>
+        </EditForm>
+        @if (optOutReachedServer)
+        {
+            <p role="status" class="alert alert-info mt-3">
+                The invalid per-form opt-out submission reached server validation.
+            </p>
+        }
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private IConfiguration Configuration { get; set; } = default!;
+
+    [SupplyParameterFromForm(FormName = "client-rule-matrix")]
+    private ClientRuleMatrixModel? BoundModel { get; set; }
+
+    [SupplyParameterFromForm(FormName = "form-opt-out")]
+    private OptOutModel? BoundOptOut { get; set; }
+
+    private ClientRuleMatrixModel Model => BoundModel ??= new();
+    private OptOutModel OptOut => BoundOptOut ??= new();
+    private string? submissionResult;
+    private bool optOutReachedServer;
+
+    private void HandleValidSubmit()
+    {
+        submissionResult = "The matrix passed server validation.";
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        submissionResult = "The invalid matrix submission reached server validation.";
+    }
+
+    private void HandleOptOutInvalidSubmit()
+    {
+        optOutReachedServer = true;
+    }
+}

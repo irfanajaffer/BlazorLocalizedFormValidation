@@ -1,0 +1,85 @@
+@page "/client-validation"
+@rendermode InteractiveWebAssembly
+@using BlazorWasmSample.Client.Models
+@using System.Globalization
+
+<PageTitle>Interactive WebAssembly validation</PageTitle>
+
+<div class="validation-lab">
+    <h1>Interactive WebAssembly localized validation</h1>
+    <p>
+        The model, resources, and <code>AddValidation</code> registration for this
+        page live in the <code>.Client</code> assembly.
+    </p>
+
+    <div class="validation-evidence" aria-label="Current test context">
+        <span class="evidence-badge">Interactive WebAssembly</span>
+        <span class="evidence-badge">@CultureInfo.CurrentUICulture.Name</span>
+    </div>
+
+    <nav aria-label="Validation culture">
+        <a href="/client-validation?culture=fr-FR&amp;ui-culture=fr-FR" data-enhance-nav="false">French (France)</a>
+        <span aria-hidden="true"> | </span>
+        <a href="/client-validation?culture=de-DE&amp;ui-culture=de-DE" data-enhance-nav="false">German (Germany)</a>
+    </nav>
+
+    <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="scenario-grid">
+            <ClientFieldScenario Title="Explicit keys" Help="Same evidence text as the server render modes.">
+                <label for="client-explicit" class="form-label">Explicit name</label>
+                <InputText id="client-explicit" class="form-control" @bind-Value="Model.ExplicitName" />
+                <ValidationMessage For="() => Model.ExplicitName" />
+            </ClientFieldScenario>
+
+            <ClientFieldScenario Title="Conventional member key" Help="Most-specific conventional key.">
+                <label for="client-conventional" class="form-label">Conventional name</label>
+                <InputText id="client-conventional" class="form-control" @bind-Value="Model.ConventionalName" />
+                <ValidationMessage For="() => Model.ConventionalName" />
+            </ClientFieldScenario>
+
+            <ClientFieldScenario Title="Formatted message" Help="Enter fewer than 3 or more than 8 characters.">
+                <label for="client-code" class="form-label">Scenario code</label>
+                <InputText id="client-code" class="form-control" @bind-Value="Model.Code" />
+                <ValidationMessage For="() => Model.Code" />
+            </ClientFieldScenario>
+
+            <ClientFieldScenario Title="Missing resource fallback" Help="The missing key must not be displayed.">
+                <label for="client-missing" class="form-label">Missing resource</label>
+                <InputText id="client-missing" class="form-control" @bind-Value="Model.MissingResource" />
+                <ValidationMessage For="() => Model.MissingResource" />
+            </ClientFieldScenario>
+
+            <ClientFieldScenario Title="Nested object" Help="Expected path: Address.Street">
+                <label for="client-street" class="form-label">Street</label>
+                <InputText id="client-street" class="form-control" @bind-Value="Model.Address.Street" />
+                <ValidationMessage For="() => Model.Address.Street" />
+            </ClientFieldScenario>
+
+            <ClientFieldScenario Title="Collection item" Help="Expected path: Contacts[0].Email">
+                <label for="client-contact" class="form-label">Contact email</label>
+                <InputText id="client-contact" class="form-control" @bind-Value="Model.Contacts[0].Email" />
+                <ValidationMessage For="() => Model.Contacts[0].Email" />
+            </ClientFieldScenario>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Validate</button>
+    </EditForm>
+
+    @if (submitted)
+    {
+        <p role="status" class="alert alert-success mt-3">Interactive WebAssembly validation passed.</p>
+    }
+</div>
+
+@code {
+    private ClientValidationModel Model { get; } = new();
+    private bool submitted;
+
+    private void HandleValidSubmit()
+    {
+        submitted = true;
+    }
+}

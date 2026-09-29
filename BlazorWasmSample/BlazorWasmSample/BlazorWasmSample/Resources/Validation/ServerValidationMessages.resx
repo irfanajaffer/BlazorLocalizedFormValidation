@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="NameDisplay" xml:space="preserve"><value>Explicit name</value></data>
+  <data name="NameRequired" xml:space="preserve"><value>EN explicit key: Enter the explicit name.</value></data>
+   <data name="ServerValidationModel_ConventionalName_RequiredAttribute_Error" xml:space="preserve"><value>EN member convention: Conventional name is required.</value></data>
+ <data name="CodeDisplay" xml:space="preserve"><value>Scenario code</value></data>
+  <data name="ServerValidationModel_Code_StringLengthAttribute_Error" xml:space="preserve"><value>EN formatted: {0} must contain between {2} and {1} characters.</value></data>
+  <data name="StreetRequired" xml:space="preserve"><value>EN nested: Street is required.</value></data>
+  <data name="ContactEmailRequired" xml:space="preserve"><value>EN collection: Contact email is required.</value></data>
+</root>
