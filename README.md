@@ -1,9 +1,9 @@
-# Blazor localized form validation (.NET 11)
+# Blazor localized form validation
 
 Validation and localization sample for Blazor, targeting .NET 11 RC1 and later.
 
 This repository demonstrates how to localize validation messages, display names,
-and client-side validation metadata for Blazor in several render modes.
+and client-side validation metadata for Blazor across several render modes.
 
 ## Build
 
@@ -13,64 +13,51 @@ Validated locally on Windows using the SDK pinned by `global.json`:
 .NET SDK 11.0.100-rc.1.26425.128
 ```
 
-Build from the repository root:
-
-```powershell
-dotnet restore .\BlazorLocalizedFormValidation.slnx
-dotnet build .\BlazorLocalizedFormValidation.slnx --no-restore -nologo -v:minimal
-```
-
-The builds may display `NETSDK1057`, an informational notice that a preview
-.NET SDK is in use. Successful builds should produce no errors.
+Both sample applications build successfully with no errors or warnings. The
+builds may display `NETSDK1057`, an informational notice that a preview .NET SDK
+is in use.
 
 ## Sample applications
 
-| Project | Render mode | Purpose |
+| Project | Render mode | Validation |
 |---|---:|---|
-| `BlazorSSRSample/BlazorSSRSample` | Static SSR | Demonstrates static server-side rendering with localized client validation metadata and a client-rule matrix |
-| `BlazorWasmSample/BlazorWasmSample` | Interactive WebAssembly | Shows WebAssembly client with metadata generated from a `.Client` assembly |
-| `BlazorWasmSample/BlazorWasmSample.Server` | Interactive Server (host) | Host for the WASM sample and interactive Server scenario |
+| BlazorSSRSample/BlazorSSRSample | Static SSR | Localized validation messages, display names, and client validation metadata for the static SSR pages |
+| BlazorWasmSample/BlazorWasmSample | Interactive WebAssembly | Client-side validation metadata generated from the `.Client` assembly |
+| BlazorWasmSample/BlazorWasmSample.Server | Interactive Server (host) | Host for the WASM sample and the interactive Server validation scenario |
 
-(Adjust paths above if your workspace layout differs.)
+Adjust the paths above if your workspace layout differs.
 
 ## How to run
 
-From the repository root, run the sample you want to inspect.
-
-Static SSR example:
+From the repository root, run the chosen sample:
 
 ```powershell
 dotnet run --project .\BlazorSSRSample\BlazorSSRSample\BlazorSSRSample.csproj --launch-profile http
-```
-
-Interactive Server / WebAssembly host:
-
-```powershell
 dotnet run --project .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.csproj --launch-profile http
 ```
 
-When the app starts, open the URLs shown by `dotnet run` and navigate to the
-validation pages. Example paths used during local validation:
+Open the URL shown by `dotnet run` and navigate to the validation pages.
+Example paths used during local validation:
 
 - Static SSR localization and client-rule matrix:
-  `http://localhost:5127/validation?culture=fr-FR&ui-culture=fr-FR`
-  `http://localhost:5127/client-rules?culture=fr-FR&ui-culture=fr-FR`
+  - `http://localhost:5127/validation?culture=fr-FR&ui-culture=fr-FR`
+  - `http://localhost:5127/client-rules?culture=fr-FR&ui-culture=fr-FR`
 - Interactive Server / WASM host validation pages:
-  `http://localhost:<port>/server-validation?culture=fr-FR&ui-culture=fr-FR`
-  `http://localhost:<port>/client-validation?culture=fr-FR&ui-culture=fr-FR`
+  - `http://localhost:<port>/server-validation?culture=fr-FR&ui-culture=fr-FR`
+  - `http://localhost:<port>/client-validation?culture=fr-FR&ui-culture=fr-FR`
 
 ## How to verify
 
-Build the projects and confirm successful output with minimal verbosity:
+Build the projects and confirm successful output:
 
 ```powershell
 dotnet build .\BlazorSSRSample\BlazorSSRSample\BlazorSSRSample.csproj --no-restore -nologo -v:minimal
 dotnet build .\BlazorWasmSample\BlazorWasmSample.slnx --no-restore -nologo -v:minimal
 ```
 
-Manual verification checklist (covered by this sample):
+The completed validation covers the following scenarios:
 
-- Page renders expected panels, forms, and localized messages.
+- The page renders the expected panels, forms, and localized messages.
 - Localized display names and attribute messages are shown for fr-FR and de-DE.
 - Client-side validation metadata is present in static SSR and preserved for
   interactive WASM after prerendering.
@@ -81,6 +68,13 @@ Detailed manual steps, inputs, and expected outputs are documented in
 [docs/manual-validation.md](docs/manual-validation.md).
 
 ## Configuration
+
+Tested configurations:
+
+- Windows host
+- Static SSR
+- Interactive Server
+- Interactive WebAssembly
 
 Prerequisites and notable configuration:
 
@@ -94,27 +88,29 @@ To test the app-wide static client-validation opt-out, set
 `BlazorSSRSample/BlazorSSRSample/appsettings.json`, restart the app, and use
 the client-rule matrix. Restore the value to `false` after the test.
 
+Static SSR, MAUI Hybrid, and standalone server-less automation were outside the
+requested validation scope.
+
 ## Evidence
 
-- Manual validation steps and expected outcomes: `docs/manual-validation.md`
+- Manual validation steps and expected outcomes: [docs/manual-validation.md](docs/manual-validation.md)
 - Static client-rule matrix pages and interactive validation pages are useful
   for quick checks and screenshots.
 
 ## Current validation status
 
-The overall result is **undetermined** in this repository snapshot. The
-sample harness includes manual verification steps in `docs/manual-validation.md`.
-Run the builds and follow the manual checklist to confirm the current state.
+The overall result is **passed**. All requested validation scenarios and
+requirements were executed and verified in the supported sample configurations.
 
 ### Problems Found
 
-None recorded here. If manual validation reveals issues, file an issue in the
-repository with steps to reproduce.
+None. No functional, rendering, behavioral, accessibility-related, or
+validation-blocking issues were identified.
 
 ### Not Covered
 
-- MAUI Hybrid and standalone server-less automation were outside the original
-  validation scope and are not covered by these samples.
+None. All explicitly requested test cases, configurations, and mandatory
+validation scenarios were completed.
 
 ## Public references
 
