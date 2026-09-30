@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using BlazorWasmSample.Client.Validation;
 using Microsoft.Extensions.Validation;
 
 namespace BlazorWasmSample.Client.Models;
@@ -17,7 +18,7 @@ public sealed class ClientValidationModel
     [StringLength(8, MinimumLength = 3)]
     public string? Code { get; set; }
 
-    [Required(ErrorMessage = "ResourceKeyThatDoesNotExist")]
+    [FallbackRequired("ResourceKeyThatDoesNotExist")]
     public string? MissingResource { get; set; }
 
     public ClientAddress Address { get; set; } = new();
