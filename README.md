@@ -93,7 +93,7 @@ requested validation scope.
 
 ## Evidence
 
-- Manual validation steps and expected outcomes are documented in the docs folder.
+- Manual validation steps and expected outcomes are documented in the evidence folder.
 - Static client-rule matrix pages and interactive validation pages are useful
   for quick checks and screenshots.
 
