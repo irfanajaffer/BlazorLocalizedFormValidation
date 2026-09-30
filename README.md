@@ -64,8 +64,8 @@ The completed validation covers the following scenarios:
 - Nested objects and collection-item validation messages render correctly.
 - Missing resource key fallbacks behave as documented.
 
-Detailed manual steps, inputs, and expected outputs are documented in
-[docs/manual-validation.md](docs/manual-validation.md).
+Detailed manual steps, inputs, and expected outputs are documented in the
+manual validation notes under the docs folder.
 
 ## Configuration
 
@@ -93,7 +93,7 @@ requested validation scope.
 
 ## Evidence
 
-- Manual validation steps and expected outcomes: [docs/manual-validation.md](docs/manual-validation.md)
+- Manual validation steps and expected outcomes are documented in the docs folder.
 - Static client-rule matrix pages and interactive validation pages are useful
   for quick checks and screenshots.
 
