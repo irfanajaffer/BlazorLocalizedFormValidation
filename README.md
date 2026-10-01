@@ -110,12 +110,14 @@ as evidence for the required issue verdict.
 
 ## Evidence
 
+- Manual validation steps and expected outcomes are documented in the `Evidence/` folder.
 - Canonical validation report:
   `Evidence/69524-Localized-Form-Messages-Validation-Report.docx`
 - Supporting screenshots and videos:
   `Evidence/`
-- If the report still needs final metadata alignment, see:
+- Report metadata wording and exact collected environment details:
   [REPORT-FOLLOWUP-COMMANDS.md](D:/BlazorLocalizedFormValidation/Evidence/REPORT-FOLLOWUP-COMMANDS.md)
+
 
 ## Current validation status
 
