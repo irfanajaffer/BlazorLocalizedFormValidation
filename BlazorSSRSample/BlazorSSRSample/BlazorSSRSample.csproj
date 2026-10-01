@@ -7,4 +7,12 @@
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharedValidation\SharedValidation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\SharedValidation\ContactModel.cs" Link="Models\ContactModel.cs" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
 @page "/client-validation"
 @rendermode InteractiveWebAssembly
-@using BlazorWasmSample.Client.Models
+@using BlazorLocalizedFormValidation.Shared
 @using System.Globalization
 
 <PageTitle>Interactive WebAssembly validation</PageTitle>
@@ -8,8 +8,9 @@
 <div class="validation-lab">
     <h1>Interactive WebAssembly localized validation</h1>
     <p>
-        The model, resources, and <code>AddValidation</code> registration for this
-        page live in the <code>.Client</code> assembly.
+        This page uses the same shared <code>ContactModel</code> and resource
+        set as the Static SSR sample so both required modes can be compared
+        directly.
     </p>
 
     <div class="validation-evidence" aria-label="Current test context">
@@ -28,40 +29,16 @@
         <ValidationSummary />
 
         <div class="scenario-grid">
-            <ClientFieldScenario Title="Explicit keys" Help="Same evidence text as the server render modes.">
-                <label for="client-explicit" class="form-label">Explicit name</label>
-                <InputText id="client-explicit" class="form-control" @bind-Value="Model.ExplicitName" />
-                <ValidationMessage For="() => Model.ExplicitName" />
+            <ClientFieldScenario Title="Name" Help="German intentionally omits ContactModel_Name_RequiredAttribute_Error so the field falls back to the framework-required text.">
+                <label for="contact-name" class="form-label">Name</label>
+                <InputText id="contact-name" class="form-control" @bind-Value="Model.Name" />
+                <ValidationMessage For="() => Model.Name" />
             </ClientFieldScenario>
 
-            <ClientFieldScenario Title="Conventional member key" Help="Most-specific conventional key.">
-                <label for="client-conventional" class="form-label">Conventional name</label>
-                <InputText id="client-conventional" class="form-control" @bind-Value="Model.ConventionalName" />
-                <ValidationMessage For="() => Model.ConventionalName" />
-            </ClientFieldScenario>
-
-            <ClientFieldScenario Title="Formatted message" Help="Enter fewer than 3 or more than 8 characters.">
-                <label for="client-code" class="form-label">Scenario code</label>
-                <InputText id="client-code" class="form-control" @bind-Value="Model.Code" />
-                <ValidationMessage For="() => Model.Code" />
-            </ClientFieldScenario>
-
-            <ClientFieldScenario Title="Missing resource fallback" Help="The missing key must not be displayed.">
-                <label for="client-missing" class="form-label">Missing resource</label>
-                <InputText id="client-missing" class="form-control" @bind-Value="Model.MissingResource" />
-                <ValidationMessage For="() => Model.MissingResource" />
-            </ClientFieldScenario>
-
-            <ClientFieldScenario Title="Nested object" Help="Expected path: Address.Street">
-                <label for="client-street" class="form-label">Street</label>
-                <InputText id="client-street" class="form-control" @bind-Value="Model.Address.Street" />
-                <ValidationMessage For="() => Model.Address.Street" />
-            </ClientFieldScenario>
-
-            <ClientFieldScenario Title="Collection item" Help="Expected path: Contacts[0].Email">
-                <label for="client-contact" class="form-label">Contact email</label>
-                <InputText id="client-contact" class="form-control" @bind-Value="Model.Contacts[0].Email" />
-                <ValidationMessage For="() => Model.Contacts[0].Email" />
+            <ClientFieldScenario Title="Email" Help="EmailRequired remains translated in both French and German.">
+                <label for="contact-email" class="form-label">Email</label>
+                <InputText id="contact-email" class="form-control" @bind-Value="Model.Email" />
+                <ValidationMessage For="() => Model.Email" />
             </ClientFieldScenario>
         </div>
 
@@ -75,7 +52,7 @@
 </div>
 
 @code {
-    private ClientValidationModel Model { get; } = new();
+    private ContactModel Model { get; } = new();
     private bool submitted;
 
     private void HandleValidSubmit()

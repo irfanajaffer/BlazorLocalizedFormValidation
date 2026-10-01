@@ -1,6 +1,6 @@
 using BlazorSSRSample.Components;
-using BlazorSSRSample.Models;
 using BlazorSSRSample.Validation;
+using BlazorLocalizedFormValidation.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +14,8 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddValidation(options =>
 {
     options.LocalizerProvider = (type, factory) =>
-        type == typeof(SharedValidationModel) ||
-        type == typeof(AddressModel) ||
         type == typeof(ContactModel)
-            ? factory.Create(typeof(ValidationMessages))
+            ? factory.Create(typeof(ContactValidationMessages))
             : factory.Create(type);
 });
 

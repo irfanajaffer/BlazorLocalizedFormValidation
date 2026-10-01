@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorWasmSample.Client\BlazorWasmSample.Client.csproj" />
+    <ProjectReference Include="..\..\..\SharedValidation\SharedValidation.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="11.0.0-rc.1.26425.128" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 using System.Globalization;
+using BlazorLocalizedFormValidation.Shared;
 using BlazorWasmSample.Client.Pages;
 using BlazorWasmSample.Client.Validation;
 using BlazorWasmSample.Components;
@@ -16,8 +17,8 @@ builder.Services.AddClientValidation();
 builder.Services.AddValidation(options =>
 {
     options.LocalizerProvider = (type, factory) =>
-        type.Namespace?.StartsWith("BlazorWasmSample.Client", StringComparison.Ordinal) == true
-            ? factory.Create(typeof(ClientValidationMessages))
+        type == typeof(ContactModel)
+            ? factory.Create(typeof(ClientContactValidationMessages))
             : factory.Create(typeof(ServerValidationMessages));
 });
 

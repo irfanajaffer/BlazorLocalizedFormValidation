@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Shared/">
+    <Project Path="SharedValidation/SharedValidation.csproj" />
+  </Folder>
   <Folder Name="/BlazorSSR/">
     <Project Path="BlazorSSRSample/BlazorSSRSample/BlazorSSRSample.csproj" />
   </Folder>

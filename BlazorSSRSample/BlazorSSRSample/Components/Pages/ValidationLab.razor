@@ -1,5 +1,5 @@
 @page "/validation"
-@using BlazorSSRSample.Models
+@using BlazorLocalizedFormValidation.Shared
 @using System.Globalization
 
 <PageTitle>Static SSR localized validation</PageTitle>
@@ -8,9 +8,9 @@
 <h1>Static SSR localized validation</h1>
 
 <p>
-    Submit the empty form to compare every localization lookup path. Each
-    resource-backed message starts with an evidence label such as
-    <code>FR clé explicite</code> or <code>DE gemeinsamer Anbieter</code>.
+    This page uses the shared <code>ContactModel</code> required by the issue.
+    Leave both fields empty and submit to compare the conventional Name
+    validation with the explicit Email validation.
 </p>
 
 <div class="validation-evidence" aria-label="Current test context">
@@ -24,89 +24,32 @@
     <a href="/validation?culture=de-DE&amp;ui-culture=de-DE">German (Germany)</a>
 </nav>
 
-<EditForm Model="Model" FormName="localization-lab" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="Model" FormName="contact-validation" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="scenario-grid">
-        <section class="scenario-card">
-            <h2 class="h5">Explicit keys</h2>
-            <p class="scenario-help"><code>NameRequired</code> and <code>NameDisplay</code></p>
-            <label for="explicit-name" class="form-label">Explicit name</label>
-            <InputText id="explicit-name" class="form-control" @bind-Value="Model.ExplicitName" />
-            <ValidationMessage For="() => Model.ExplicitName" />
+        <section class="scenario-card" data-testid="name-scenario">
+            <h2 class="h5">Name</h2>
+            <p class="scenario-help">
+                Conventional key: <code>ContactModel_Name_RequiredAttribute_Error</code>.
+                The German resource intentionally omits this key so the message
+                falls back to the framework-required text.
+            </p>
+            <label for="contact-name" class="form-label">Name</label>
+            <InputText id="contact-name" class="form-control" @bind-Value="Model.Name" />
+            <ValidationMessage For="() => Model.Name" />
         </section>
 
-        <section class="scenario-card">
-            <h2 class="h5">Conventional member key</h2>
-            <p class="scenario-help"><code>ValidationLabModel_ConventionalName_RequiredAttribute_Error</code></p>
-            <label for="conventional-name" class="form-label">Conventional name</label>
-            <InputText id="conventional-name" class="form-control" @bind-Value="Model.ConventionalName" />
-            <ValidationMessage For="() => Model.ConventionalName" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Conventional type key</h2>
-            <p class="scenario-help"><code>ValidationLabModel_RequiredAttribute_Error</code></p>
-            <label for="type-convention" class="form-label">Type convention field</label>
-            <InputText id="type-convention" class="form-control" @bind-Value="Model.TypeConvention" />
-            <ValidationMessage For="() => Model.TypeConvention" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Conventional global key</h2>
-            <p class="scenario-help"><code>RequiredAttribute_Error</code></p>
-            <label for="global-convention" class="form-label">Global convention field</label>
-            <InputText id="global-convention" class="form-control" @bind-Value="Model.GlobalConvention.Value" />
-            <ValidationMessage For="() => Model.GlobalConvention.Value" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Formatted message</h2>
-            <p class="scenario-help">Enter fewer than 3 or more than 8 characters.</p>
-            <label for="scenario-code" class="form-label">Scenario code</label>
-            <InputText id="scenario-code" class="form-control" @bind-Value="Model.Code" />
-            <ValidationMessage For="() => Model.Code" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Missing resource fallback</h2>
-            <p class="scenario-help"><code>ResourceKeyThatDoesNotExist</code> must not be shown as the message.</p>
-            <label for="missing-resource" class="form-label">Missing resource field</label>
-            <InputText id="missing-resource" class="form-control" @bind-Value="Model.MissingResource" />
-            <ValidationMessage For="() => Model.MissingResource" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Attribute-owned resources</h2>
-            <p class="scenario-help"><code>ErrorMessageResourceType</code> and <code>Display.ResourceType</code></p>
-            <label for="attribute-owned" class="form-label">Attribute-owned field</label>
-            <InputText id="attribute-owned" class="form-control" @bind-Value="Model.AttributeOwned" />
-            <ValidationMessage For="() => Model.AttributeOwned" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Nested object</h2>
-            <p class="scenario-help">Expected path: <code>Address.Street</code></p>
-            <label for="street" class="form-label">Street</label>
-            <InputText id="street" class="form-control" @bind-Value="Model.Address.Street" />
-            <ValidationMessage For="() => Model.Address.Street" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Collection item</h2>
-            <p class="scenario-help">Expected path: <code>Contacts[0].Email</code></p>
-            <label for="contact-email" class="form-label">Contact email</label>
-            <InputText id="contact-email" class="form-control" @bind-Value="Model.Contacts[0].Email" />
-            <ValidationMessage For="() => Model.Contacts[0].Email" />
-        </section>
-
-        <section class="scenario-card">
-            <h2 class="h5">Shared localizer provider</h2>
-            <p class="scenario-help">Resolved from <code>ValidationMessages</code>.</p>
-            <label for="shared-value" class="form-label">Shared value</label>
-            <InputText id="shared-value" class="form-control" @bind-Value="Model.Shared.Value" />
-            <ValidationMessage For="() => Model.Shared.Value" />
+        <section class="scenario-card" data-testid="email-scenario">
+            <h2 class="h5">Email</h2>
+            <p class="scenario-help">
+                Explicit key: <code>EmailRequired</code>. This translation is
+                present in both French and German.
+            </p>
+            <label for="contact-email" class="form-label">Email</label>
+            <InputText id="contact-email" class="form-control" @bind-Value="Model.Email" />
+            <ValidationMessage For="() => Model.Email" />
         </section>
     </div>
 
@@ -122,12 +65,12 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm(FormName = "localization-lab")]
-    private ValidationLabModel? FormModel { get; set; }
+    [SupplyParameterFromForm(FormName = "contact-validation")]
+    private ContactModel? FormModel { get; set; }
 
     private bool submitted;
 
-    private ValidationLabModel Model => FormModel ??= new();
+    private ContactModel Model => FormModel ??= new();
 
     private void HandleValidSubmit()
     {

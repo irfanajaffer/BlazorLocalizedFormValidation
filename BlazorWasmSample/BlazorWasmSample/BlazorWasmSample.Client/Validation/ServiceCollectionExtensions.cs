@@ -9,11 +9,9 @@ public static class ServiceCollectionExtensions
         services.AddValidation(options =>
         {
             options.LocalizerProvider = (_, factory) =>
-                factory.Create(typeof(ClientValidationMessages));
+                factory.Create(typeof(ClientContactValidationMessages));
         });
 
         return services;
     }
 }
-
-public sealed class ClientValidationMessages;

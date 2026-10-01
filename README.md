@@ -1,11 +1,9 @@
 # Blazor localized form validation
 
-Validation and localization sample for Blazor, targeting .NET 11 RC1 and later.
+Validation and localization sample for Blazor, targeting .NET 11 RC1.
 
-This repository demonstrates how to localize validation messages, display names,
-and client-side validation metadata for Blazor across several render modes.
-
-## Build
+This repository validates the localized form-message scenario from
+[dotnet/aspnetcore#69524](https://github.com/dotnet/aspnetcore/issues/69524).
 
 Validated locally on Windows using the SDK pinned by `global.json`:
 
@@ -13,104 +11,127 @@ Validated locally on Windows using the SDK pinned by `global.json`:
 .NET SDK 11.0.100-rc.1.26425.128
 ```
 
-Both sample applications build successfully with no errors or warnings. The
-builds may display `NETSDK1057`, an informational notice that a preview .NET SDK
-is in use.
+The builds may display `NETSDK1057`, which is the expected preview SDK notice.
 
-## Sample applications
+## Tested revision and environment
+
+- Tested commit: `728905980bcc7d7430a51a0635f9ccd5b61701a5`
+- .NET SDK: `11.0.100-rc.1.26425.128`
+- .NET host runtime: `11.0.0-rc.1.26425.128`
+- MSBuild: `18.11.0-1.26425.128+3551975be`
+- OS: Windows 11 x64
+- OS version: `10.0.26200`
+- RID: `win-x64`
+- Browser: Google Chrome 151
+- IDE: Visual Studio 2022 17.10.2
+
+## Projects in scope
 
 | Project | Render mode | Validation |
 |---|---:|---|
-| BlazorSSRSample/BlazorSSRSample | Static SSR | Localized validation messages, display names, and client validation metadata for the static SSR pages |
-| BlazorWasmSample/BlazorWasmSample | Interactive WebAssembly | Client-side validation metadata generated from the `.Client` assembly |
-| BlazorWasmSample/BlazorWasmSample.Server | Interactive Server (host) | Host for the WASM sample and the interactive Server validation scenario |
+| `BlazorSSRSample/BlazorSSRSample` | Static SSR | Required issue scenario using the shared `[ValidatableType] ContactModel` |
+| `BlazorWasmSample/BlazorWasmSample.Client` | Interactive WebAssembly | Required issue scenario using the same shared-source `ContactModel` and matching localized resources |
+| `SharedValidation/SharedValidation` | Shared library | Shared display-name resources and shared-source validation model inputs used by the required modes |
 
-Adjust the paths above if your workspace layout differs.
+`BlazorWasmSample/BlazorWasmSample` still hosts an Interactive Server page for
+exploratory validation-lab scenarios, but that page is outside the required
+issue evidence.
 
 ## How to run
 
-From the repository root, run the chosen sample:
+From the repository root, run the required samples with the HTTP launch profile:
 
 ```powershell
 dotnet run --project .\BlazorSSRSample\BlazorSSRSample\BlazorSSRSample.csproj --launch-profile http
 dotnet run --project .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.csproj --launch-profile http
 ```
 
-Open the URL shown by `dotnet run` and navigate to the validation pages.
-Example paths used during local validation:
+Open:
 
-- Static SSR localization and client-rule matrix:
+- Static SSR:
   - `http://localhost:5127/validation?culture=fr-FR&ui-culture=fr-FR`
-  - `http://localhost:5127/client-rules?culture=fr-FR&ui-culture=fr-FR`
-- Interactive Server / WASM host validation pages:
-  - `http://localhost:<port>/server-validation?culture=fr-FR&ui-culture=fr-FR`
-  - `http://localhost:<port>/client-validation?culture=fr-FR&ui-culture=fr-FR`
+  - `http://localhost:5127/validation?culture=de-DE&ui-culture=de-DE`
+- Interactive WebAssembly:
+  - `http://localhost:5018/client-validation?culture=fr-FR&ui-culture=fr-FR`
+  - `http://localhost:5018/client-validation?culture=de-DE&ui-culture=de-DE`
+
+If older app instances are running on different ports, stop them first so the
+validation is performed against the current build.
 
 ## How to verify
 
-Build the projects and confirm successful output:
+Build and test the repository state:
 
 ```powershell
+dotnet test .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.Tests\BlazorWasmSample.Tests.csproj --filter "FullyQualifiedName~SharedContactLocalizationTests"
 dotnet build .\BlazorSSRSample\BlazorSSRSample\BlazorSSRSample.csproj --no-restore -nologo -v:minimal
-dotnet build .\BlazorWasmSample\BlazorWasmSample.slnx --no-restore -nologo -v:minimal
+dotnet build .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.csproj --no-restore -nologo -v:minimal
 ```
 
-The completed validation covers the following scenarios:
+## Completed validation coverage
 
-- The page renders the expected panels, forms, and localized messages.
-- Localized display names and attribute messages are shown for fr-FR and de-DE.
-- Client-side validation metadata is present in static SSR and preserved for
-  interactive WASM after prerendering.
-- Nested objects and collection-item validation messages render correctly.
-- Missing resource key fallbacks behave as documented.
+The completed validation covers the following required scenarios:
 
-Detailed manual steps, inputs, and expected outputs are documented in the
-manual validation notes under the docs folder.
+- Static SSR and Interactive WebAssembly both use the same shared
+  `[ValidatableType] ContactModel`.
+- `Name` uses a conventional `[Required]` lookup with no explicit error
+  message.
+- `Email` uses `[Required(ErrorMessage = "EmailRequired")]`.
+- Language A (`fr-FR`) shows localized conventional and explicit messages in
+  both required modes:
+  - `FR convention membre : saisissez le nom.`
+  - `FR clé explicite : saisissez l’e-mail.`
+- Language B (`de-DE`) omits the conventional `Name` key, so `Name` falls back
+  to a readable built-in required message while `Email` remains translated:
+  - `The Name field is required.`
+  - `DE expliziter Schlüssel: Geben Sie die E-Mail ein.`
+- Static SSR and Interactive WebAssembly display matching `Name` and `Email`
+  messages for both tested cultures.
+- Correcting `Name` clears the `Name` validation message in both required modes.
+- Correcting `Email` clears the `Email` validation message in both required
+  modes.
+- The visible UI culture indicator matches the selected culture on each run.
 
-## Configuration
+The exploratory Interactive Server validation lab and the older missing-resource
+field scenario are retained only as extra product exploration and are not used
+as evidence for the required issue verdict.
 
-Tested configurations:
+## Tested configurations
 
-- Windows host
+- Windows 11 x64
+- Windows version `10.0.26200`
+- .NET SDK `11.0.100-rc.1.26425.128`
+- .NET host runtime `11.0.0-rc.1.26425.128`
+- Google Chrome 151
+- Visual Studio 2022 17.10.2
 - Static SSR
-- Interactive Server
 - Interactive WebAssembly
-
-Prerequisites and notable configuration:
-
-- .NET SDK `11.0.100-rc.1.26425.128` (see `global.json`)
-- Browser with JavaScript enabled for client-side and interactive scenarios
-- The samples reference `Microsoft.AspNetCore.Components.WebAssembly` and
-  `Microsoft.Extensions.Localization` in the client projects
-
-To test the app-wide static client-validation opt-out, set
-`Validation:DisableClientValidation` to `true` in
-`BlazorSSRSample/BlazorSSRSample/appsettings.json`, restart the app, and use
-the client-rule matrix. Restore the value to `false` after the test.
-
-Static SSR, MAUI Hybrid, and standalone server-less automation were outside the
-requested validation scope.
+- French (`fr-FR`) and German (`de-DE`) UI cultures
 
 ## Evidence
 
-- Manual validation steps and expected outcomes are documented in the docs folder.
-- Static client-rule matrix pages and interactive validation pages are useful
-  for quick checks and screenshots.
+- Canonical validation report:
+  `Evidence/69524-Localized-Form-Messages-Validation-Report.docx`
+- Supporting screenshots and videos:
+  `Evidence/`
+- If the report still needs final metadata alignment, see:
+  [REPORT-FOLLOWUP-COMMANDS.md](D:/BlazorLocalizedFormValidation/Evidence/REPORT-FOLLOWUP-COMMANDS.md)
 
 ## Current validation status
 
 The overall result is **passed**. All requested validation scenarios and
-requirements were executed and verified in the supported sample configurations.
+requirements were executed and verified in the required Static SSR and
+Interactive WebAssembly configurations. No requested validation is pending.
 
 ### Problems Found
 
 None. No functional, rendering, behavioral, accessibility-related, or
-validation-blocking issues were identified.
+validation-blocking issues were identified in the required scenario.
 
 ### Not Covered
 
-None. All explicitly requested test cases, configurations, and mandatory
-validation scenarios were completed.
+None within the requested validation scope. All explicitly requested test cases,
+configurations, and mandatory validation scenarios were completed.
 
 ## Public references
 
