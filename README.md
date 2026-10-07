@@ -15,7 +15,7 @@ The builds may display `NETSDK1057`, which is the expected preview SDK notice.
 
 ## Tested revision and environment
 
-- Tested commit: `728905980bcc7d7430a51a0635f9ccd5b61701a5`
+- Tested commit: `45989620f0ccfe9734832f045ce61fd53eeaa8c8`
 - .NET SDK: `11.0.100-rc.1.26425.128`
 - .NET host runtime: `11.0.0-rc.1.26425.128`
 - MSBuild: `18.11.0-1.26425.128+3551975be`
@@ -63,7 +63,7 @@ validation is performed against the current build.
 Build and test the repository state:
 
 ```powershell
-dotnet test .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.Tests\BlazorWasmSample.Tests.csproj --filter "FullyQualifiedName~SharedContactLocalizationTests"
+dotnet test .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.Tests\BlazorWasmSample.Tests.csproj --filter "(FullyQualifiedName~SharedContactLocalizationTests|FullyQualifiedName~FallbackRequiredAttributeTests)" -nologo -v:minimal
 dotnet build .\BlazorSSRSample\BlazorSSRSample\BlazorSSRSample.csproj --no-restore -nologo -v:minimal
 dotnet build .\BlazorWasmSample\BlazorWasmSample\BlazorWasmSample.csproj --no-restore -nologo -v:minimal
 ```
